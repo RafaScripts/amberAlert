@@ -9,13 +9,15 @@ services:
     restart: unless-stopped
 
   traefik:
-    image: traefik:v3.0
+    image: traefik:v2.10
     container_name: traefik
     network_mode: host
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--entrypoints.web.address=:80"
+      # Extra logging to debug
+      - "--log.level=DEBUG" 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
@@ -25,3 +27,10 @@ services:
     container_name: nestjs
     network_mode: host
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Catch ALL traffic (PathPrefix /) -> simulates Captive Portal
+      - "traefik.http.routers.amber.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.amber.entrypoints=web"
+      # Service definition pointing to port 3001
+      - "traefik.http.services.amber.loadbalancer.server.port=3001"

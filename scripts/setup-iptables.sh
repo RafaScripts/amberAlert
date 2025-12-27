@@ -1,10 +1,14 @@
 #!/bin/bash
 
 # Interface definitions
-WLAN_IFACE="wlan0"
-TARGET_PORT="80" # Traefik is listening on host port 80 directly due to network_mode: host
+# Auto-detect default interface (the one with the default route)
+WLAN_IFACE=$(ip route | grep default | awk '{print $5}' | head -n1)
+if [ -z "$WLAN_IFACE" ]; then
+    WLAN_IFACE="eth0" # Fallback
+fi
 
-echo "🔧 Configurando redirecionamento de tráfego para simulação Amber Alert..."
+echo "🔍 Interface detectada: $WLAN_IFACE"
+TARGET_PORT="80"
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]
