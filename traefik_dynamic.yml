@@ -1,0 +1,13 @@
+http:
+  routers:
+    amber-router:
+      rule: "PathPrefix(`/`)"
+      service: "amber-service"
+      entryPoints:
+        - "web"
+
+  services:
+    amber-service:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:3001"

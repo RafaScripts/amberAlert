@@ -14,12 +14,11 @@ services:
     network_mode: host
     command:
       - "--api.insecure=true"
-      - "--providers.docker=true"
+      - "--providers.file.filename=/etc/traefik/dynamic_conf.yml"
       - "--entrypoints.web.address=:80"
-      # Extra logging to debug
-      - "--log.level=DEBUG" 
+      - "--log.level=DEBUG"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik_dynamic.yml:/etc/traefik/dynamic_conf.yml
     restart: unless-stopped
 
   backend:
@@ -27,10 +26,4 @@ services:
     container_name: nestjs
     network_mode: host
     restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      # Catch ALL traffic (PathPrefix /) -> simulates Captive Portal
-      - "traefik.http.routers.amber.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.amber.entrypoints=web"
-      # Service definition pointing to port 3001
-      - "traefik.http.services.amber.loadbalancer.server.port=3001"
+    # Labels removed, using explicit file config
