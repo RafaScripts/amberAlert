@@ -139,14 +139,35 @@ Toda conexão TCP porta 80 que chega na interface Wi-Fi é redirecionada para `l
 
 Se o DHCP não funcionar ou você quiser "apontar manualmente" o celular para o servidor para testes:
 
-1.  **No Celular**, vá nas configurações de Wi-Fi da rede.
-2.  Mude as "Configurações de IP" de **DHCP** para **Estático**.
-3.  Preencha manualmente (Ajuste conforme sua rede 192.168.1.x):
-    *   **Endereço IP:** `192.168.1.200` (Escolha um IP livre na sua rede).
-    *   **Gateway / Roteador:** `192.168.1.109` (O IP da sua VM Amber - **IMPORTANTE**).
-    *   **DNS 1:** `192.168.1.109` (O IP da sua VM Amber - **CRÍTICO**).
-    *   **DNS 2:** Deixe em branco.
-4.  Salve e reconecte.
-5.  Abra o navegador e tente acessar `http://captive.apple.com` ou `http://neverssl.com`.
-    *   *Resultado:* Deve abrir o Alerta AMBER.
+### 5.4 Teste Manual (Simulação de DNS/Gateway)
+
+Caso o DHCP falhe (ex: roteador da casa interferindo), configure o IP estático manualmente no celular para forçar o tráfego a passar pela nossa VM.
+
+#### 🤖 Android
+1.  Vá em **Configurações** → **Wi-Fi**.
+2.  Toque e segure no nome da rede Wi-Fi (ou clique na engrenagem/seta ao lado).
+3.  Selecione **Modificar Rede** (ou Configurações Avançadas).
+4.  Procure por **Configurações de IP** e mude de `DHCP` para **`Estático`**.
+5.  Preencha:
+    *   **Endereço IP:** `192.168.1.200` (IP livre na sua rede).
+    *   **Gateway:** `192.168.1.109` (IP da VM Amber).
+    *   **DNS 1:** `192.168.1.109` (IP da VM Amber).
+    *   **DNS 2:** (Deixar vazio ou 8.8.8.8 se quiser testar internet real, mas para o alerta use o da VM).
+6.  Salvar.
+7.  Desligue e ligue o Wi-Fi.
+
+#### 🍎 iOS (iPhone/iPad)
+1.  Vá em **Ajustes** → **Wi-Fi**.
+2.  Toque no ícone **(i)** azul ao lado da rede conectada.
+3.  Role até **Configurar IP** e mude para **`Manual`**.
+    *   **Endereço:** `192.168.1.200`
+    *   **Máscara de Sub-rede:** `255.255.255.0`
+    *   **Roteador:** `192.168.1.109`
+4.  Volte, toque em **Configurar DNS** e mude para **`Manual`**.
+    *   Apague os servidores existentes.
+    *   Adicione servidor: `192.168.1.109`.
+5.  Toque em **Salvar**.
+
+**Teste Final:**
+Abra o navegador e acesse `http://captive.apple.com`. Deve aparecer o Alerta.
 
